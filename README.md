@@ -33,6 +33,13 @@ An Electron-based AI meeting assistant that provides real-time transcription and
 - Google Cloud account with Speech-to-Text API enabled
 - OpenAI API key
 
+### API Keys Setup
+
+Before using the application, you need to:
+
+1. Replace the placeholder OpenAI API key in `main.js` with your actual key
+2. Replace the placeholder Google Cloud credentials in `lazy-job-seeker-4b29b-eb0b308d0ba7.json` with your actual service account credentials
+
 ### Installation
 
 1. Clone the repository
@@ -46,9 +53,7 @@ cd angel-for-amc-windows-and-silicon
 npm install
 ```
 
-3. Create a Google Cloud credentials file and save it as `lazy-job-seeker-4b29b-eb0b308d0ba7.json` in the project root
-
-4. Start the development server
+3. Start the development server
 ```bash
 ./start.sh
 ```

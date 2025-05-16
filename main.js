@@ -15,7 +15,7 @@ let currentTranscript = ''
 
 // Initialize OpenAI client with simple configuration
 const openai = new OpenAI({
-  apiKey: 'sk-REPLACED_PLACEHOLDER'
+  apiKey: 'YOUR_OPENAI_API_KEY' // Replace with your actual key before using
 });
 
 // Function to get credentials path that works in both dev and production
