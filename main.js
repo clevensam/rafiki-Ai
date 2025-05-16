@@ -210,42 +210,52 @@ ipcMain.on('toggle-recording', async () => {
 ipcMain.on('toggle-screen-sharing-mode', (event, isScreenSharing) => {
   if (mainWindow) {
     if (isScreenSharing) {
-      // Hide mode settings
-      mainWindow.setAlwaysOnTop(true, "screen-saver")
-      mainWindow.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true })
-      mainWindow.setOpacity(0.9)
-      
-      if (process.platform === 'darwin') {
-        mainWindow.setWindowButtonVisibility(false)
+      // Hide mode settings - properly exclude from screen capture
+      if (process.platform === 'darwin') { // macOS
+        // First set content protection before changing other properties
+        mainWindow.setContentProtection(true);
+        
+        // Use specific window level for macOS to ensure it stays on top but is excluded from capture
+        mainWindow.setAlwaysOnTop(true, "floating", 1);
+        
+        // This is important for macOS to properly exclude the window
+        mainWindow.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true });
+        
+        // Set opacity slightly to help with exclusion (macOS trick)
+        mainWindow.setOpacity(0.99);
+        
+        // Hide window buttons
+        mainWindow.setWindowButtonVisibility(false);
+      } else if (process.platform === 'win32') { // Windows
+        // For Windows, we use a different approach
+        mainWindow.setContentProtection(true);
+        mainWindow.setAlwaysOnTop(true, "screen-saver", 1);
+        mainWindow.setSkipTaskbar(false); // Keep in taskbar
       }
       
-      // Remove size changes in hide mode
-      // mainWindow.setMinimumSize(200, 100)
-      // mainWindow.setSize(200, 100)
-      
-      // Remove frame in hide mode
-      mainWindow.setHasShadow(false)
-      mainWindow.setContentProtection(true)
+      // Common settings for all platforms
+      mainWindow.setHasShadow(false);
     } else {
       // Normal mode settings
-      mainWindow.setAlwaysOnTop(true)
-      mainWindow.setVisibleOnAllWorkspaces(false)
-      mainWindow.setOpacity(1.0)
+      mainWindow.setContentProtection(false);
+      mainWindow.setOpacity(1.0);
       
       if (process.platform === 'darwin') {
-        mainWindow.setWindowButtonVisibility(true)
+        // macOS specific restore
+        mainWindow.setAlwaysOnTop(true);
+        mainWindow.setVisibleOnAllWorkspaces(false);
+        mainWindow.setWindowButtonVisibility(true);
+      } else if (process.platform === 'win32') {
+        // Windows specific restore
+        mainWindow.setAlwaysOnTop(true);
+        mainWindow.setSkipTaskbar(false);
       }
       
-      // Restore normal size - also removed
-      // mainWindow.setMinimumSize(500, 400)
-      // mainWindow.setSize(500, 400)
-      
-      // Restore frame
-      mainWindow.setHasShadow(true)
-      mainWindow.setContentProtection(false)
+      // Restore frame for all platforms
+      mainWindow.setHasShadow(true);
     }
     
-    mainWindow.webContents.send('screen-sharing-active', isScreenSharing)
+    mainWindow.webContents.send('screen-sharing-active', isScreenSharing);
   }
 })
 
