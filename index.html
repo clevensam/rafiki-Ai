@@ -395,9 +395,30 @@
             animation: fadeIn 0.3s ease;
         }
         
-        /* Screen Sharing Mode Border */
+        /* Screen Sharing Mode Styles */
         .screen-sharing-mode .container {
-            border: 2px solid var(--danger);
+            border: 2px solid var(--danger) !important;
+            position: relative;
+            overflow: visible !important;
+        }
+        
+        .screen-sharing-mode .container::before {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            border: 1px dashed var(--danger);
+            border-radius: var(--radius-lg);
+            pointer-events: none;
+            animation: pulse-border 2s infinite;
+        }
+        
+        @keyframes pulse-border {
+            0% { border-color: rgba(239, 68, 68, 0.5); }
+            50% { border-color: rgba(239, 68, 68, 1); }
+            100% { border-color: rgba(239, 68, 68, 0.5); }
         }
         
         /* Utility Classes */
@@ -791,23 +812,50 @@
         
         // Screen sharing mode toggle handler
         screenSharingToggle.addEventListener('change', () => {
-            ipcRenderer.send('toggle-screen-sharing-mode', screenSharingToggle.checked);
+            const isHideMode = screenSharingToggle.checked;
+            
+            // First update UI immediately to give user feedback
+            const indicator = document.getElementById('screenSharingIndicator');
+            const body = document.body;
+            const container = document.querySelector('.container');
+            
+            if (isHideMode) {
+                // Show screen sharing mode indicator
+                indicator.style.display = 'flex';
+                indicator.innerHTML = '<i class="fas fa-desktop"></i> Hiding from Screen Capture...';
+                
+                // Add visual cues
+                body.classList.add('screen-sharing-mode');
+                container.style.border = '2px solid #ef4444';
+                container.style.boxShadow = '0 0 8px rgba(239, 68, 68, 0.5)';
+                
+                console.log('Requested screen sharing hide mode');
+            } else {
+                // Hide indicators
+                indicator.style.display = 'none';
+                body.classList.remove('screen-sharing-mode');
+                container.style.border = '';
+                container.style.boxShadow = '';
+                
+                console.log('Requested normal mode');
+            }
+            
+            // Then tell main process to apply the actual exclusion
+            ipcRenderer.send('toggle-screen-sharing-mode', isHideMode);
         });
         
         // Screen sharing mode visual indicator handler
         ipcRenderer.on('screen-sharing-active', (event, isActive) => {
             const indicator = document.getElementById('screenSharingIndicator');
-            const body = document.body;
             
             if (isActive) {
                 indicator.style.display = 'flex';
-                body.classList.add('screen-sharing-mode');
+                indicator.innerHTML = '<i class="fas fa-shield-alt"></i> Hidden from Screen Capture';
             } else {
                 indicator.style.display = 'none';
-                body.classList.remove('screen-sharing-mode');
             }
         });
-        
+
         // Add transcript update handler
         ipcRenderer.on('transcript', (event, text) => {
             const transcriptElement = document.getElementById('transcript');
