@@ -15,7 +15,7 @@ let currentTranscript = ''
 
 // Initialize OpenAI client with simple configuration
 const openai = new OpenAI({
-  apiKey: 'YOUR_OPENAI_API_KEY' // Replace with your actual key before using
+  apiKey: 'sk-REPLACED_PLACEHOLDER' // Replace with your actual key before using
 });
 
 // Function to get credentials path that works in both dev and production
@@ -117,19 +117,21 @@ async function getOpenAIAnswer(transcript) {
   try {
     console.log('Sending to OpenAI:', transcript)
     const completion = await openai.chat.completions.create({
-      model: "gpt-4-1106-preview",
+      model: "gpt-4o-mini",
       messages: [
         {
           role: "system",
-          content: "You are a helpful AI assistant in a meeting. Keep your responses clear, concise, and professional."
+          content: "You are a helpful AI assistant in a meeting. Keep your responses very brief, clear, and direct."
         },
         {
           role: "user",
           content: transcript
         }
       ],
-      temperature: 0.7,
-      max_tokens: 150
+      temperature: 0.5,
+      max_tokens: 120,
+      presence_penalty: 0,
+      frequency_penalty: 0
     });
 
     if (completion?.choices?.[0]?.message?.content) {
@@ -217,9 +219,9 @@ ipcMain.on('toggle-screen-sharing-mode', (event, isScreenSharing) => {
         mainWindow.setWindowButtonVisibility(false)
       }
       
-      // Set minimum size in hide mode
-      mainWindow.setMinimumSize(200, 100)
-      mainWindow.setSize(200, 100)
+      // Remove size changes in hide mode
+      // mainWindow.setMinimumSize(200, 100)
+      // mainWindow.setSize(200, 100)
       
       // Remove frame in hide mode
       mainWindow.setHasShadow(false)
@@ -234,9 +236,9 @@ ipcMain.on('toggle-screen-sharing-mode', (event, isScreenSharing) => {
         mainWindow.setWindowButtonVisibility(true)
       }
       
-      // Restore normal size
-      mainWindow.setMinimumSize(500, 400)
-      mainWindow.setSize(500, 400)
+      // Restore normal size - also removed
+      // mainWindow.setMinimumSize(500, 400)
+      // mainWindow.setSize(500, 400)
       
       // Restore frame
       mainWindow.setHasShadow(true)
@@ -338,8 +340,8 @@ ipcMain.on('audio-data', async (event, base64Audio) => {
       // Send transcription to renderer
       if (mainWindow && !mainWindow.isDestroyed()) {
         mainWindow.webContents.send('transcript', transcription);
-        // Get answer from OpenAI
-        getOpenAIAnswer(transcription);
+        // Automatically get answer from OpenAI
+        await getOpenAIAnswer(transcription);
       }
     } else {
       console.log('No transcription available');
