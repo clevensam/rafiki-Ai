@@ -9,10 +9,11 @@
     "build": "electron-builder",
     "build-mac": "electron-builder --mac",
     "build-win": "electron-builder --win",
-    "dist:mac": "npm run build-mac",
-    "dist:win": "npm run build-win"
+    "build-macarm": "electron-builder --mac --arm64",
+    "build-all": "sh ./build-all.sh",
+    "postinstall": "electron-builder install-app-deps"
   },
-  "author": "",
+  "author": "Lazy Job Seeker",
   "license": "ISC",
   "dependencies": {
     "@google-cloud/speech": "^7.0.1",
@@ -22,6 +23,7 @@
     "openai": "^4.24.1"
   },
   "devDependencies": {
+    "@electron/notarize": "^3.0.1",
     "electron": "^28.0.0",
     "electron-builder": "^24.13.3"
   },
@@ -34,10 +36,18 @@
       "hardenedRuntime": true,
       "gatekeeperAssess": false,
       "entitlements": "build/entitlements.mac.plist",
-      "entitlementsInherit": "build/entitlements.mac.plist"
+      "entitlementsInherit": "build/entitlements.mac.plist",
+      "target": [
+        "dmg",
+        "zip"
+      ]
     },
     "win": {
-      "icon": "assets/icons/icon.ico"
+      "icon": "assets/icons/icon.ico",
+      "target": [
+        "nsis",
+        "zip"
+      ]
     },
     "files": [
       "**/*",
@@ -48,6 +58,13 @@
         "from": "lazy-job-seeker-4b29b-eb0b308d0ba7.json",
         "to": "lazy-job-seeker-4b29b-eb0b308d0ba7.json"
       }
-    ]
+    ],
+    "asarUnpack": [
+      "node_modules/@google-cloud/text-to-speech/**/*",
+      "node_modules/@google-cloud/speech/**/*",
+      "node_modules/node-record-lpcm16/**/*"
+    ],
+    "afterSign": "scripts/notarize.js",
+    "publish": null
   }
 }

@@ -50,18 +50,19 @@
         }
         
         .container {
-    background: var(--card);
-    width: 100%;
-    min-width: 500px; /* Changed from max-width to min-width */
-    max-width: 90vw; /* Added maximum viewport width constraint */
-    height: 90vh; /* Added viewport-based height */
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-lg);
-    overflow: auto; /* Changed from hidden to allow scrolling */
-    position: relative;
-    resize: both; /* Enable resizing in both directions */
-    transition: all 0.3s ease; /* Smooth resizing animation */
-}
+            background: var(--card);
+            width: 100%;
+            min-width: 450px;
+            max-width: 90vw;
+            height: 85vh;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+        }
         
         /* Welcome Screen Styles */
         .welcome-screen {
@@ -81,14 +82,6 @@
         
         .title-wrapper {
             margin-bottom: 1.5rem;
-        }
-        
-        .toggle-text {
-            font-size: 0.625rem; /* Small text size */
-            color: var(--text-light);
-            display: block;
-            text-align: center;
-            margin-top: 0.25rem; /* Space between toggle and text */
         }
         
         .product-name {
@@ -176,162 +169,29 @@
             margin: 0 3px;
         }
         
-        /* Main App Content Styles */
+        /* Chat App Content Styles */
         .content {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            overflow: hidden;
+        }
+        
+        .header {
             padding: 1rem;
-        }
-        
-        .section {
-            margin-bottom: 0.75rem;
-        }
-        
-        .section-title {
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: var(--text-light);
-            margin-bottom: 0.5rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-        }
-        
-        .section-title i {
-            color: var(--primary);
-        }
-        
-        .card {
-            background: var(--card);
-            border-radius: var(--radius);
-            padding: 0.75rem;
-            box-shadow: var(--shadow-sm);
-            margin-bottom: 0.75rem;
-            border: 1px solid var(--border);
-            transition: var(--transition);
-        }
-        
-        .card:hover {
-            box-shadow: var(--shadow);
-        }
-        
-        #transcript, #answer {
-    min-height: 120px;
-    max-height: 400px; /* Increased from 100px */
-    padding: 0.75rem;
-    border-radius: var(--radius-sm);
-    background: var(--background);
-    font-size: 0.875rem;
-    line-height: 1.5;
-    overflow-y: auto;
-    resize: vertical; /* Enable vertical resizing */
-    transition: height 0.3s ease;
-}
-        
-        #transcript {
-            border-left: 4px solid var(--primary);
-        }
-        
-        #answer {
-            border-left: 4px solid var(--success);
-        }
-        
-        .button-group {
-            display: flex;
-            gap: 0.5rem;
-            margin-top: 0.75rem;
-            flex-wrap: nowrap;
-        }
-        
-        .btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.25rem;
-            padding: 0.5rem 0.75rem;
-            border-radius: var(--radius);
-            font-weight: 600;
-            font-size: 0.75rem;
-            cursor: pointer;
-            border: none;
-            transition: var(--transition);
-            flex: 1;
-            min-width: 0;
-            white-space: nowrap;
-        }
-        
-        .btn-primary {
-            background: var(--primary);
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border);
+            background-color: var(--primary);
             color: white;
-            box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
         }
         
-        .btn-primary:hover {
-            background: var(--primary-dark);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+        .header-title {
+            font-weight: 700;
+            font-size: 1.25rem;
         }
         
-        .btn-primary.recording {
-            background: var(--danger);
-            box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
-        }
-        
-        .btn-primary.recording:hover {
-            background: #dc2626;
-            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
-        }
-        
-        .btn-secondary {
-            background: white;
-            color: var(--text);
-            border: 1px solid var(--border);
-            box-shadow: var(--shadow-sm);
-        }
-        
-        .btn-secondary:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow);
-            border-color: var(--primary-light);
-        }
-        
-        #getAnswer {
-            background: linear-gradient(135deg, var(--success), #059669);
-            color: white;
-            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
-        }
-        
-        #getAnswer:hover {
-            background: linear-gradient(135deg, #059669, #047857);
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
-        }
-        
-        #newChat {
-            background: white;
-            color: var(--text);
-            border: 1px solid var(--border);
-        }
-        
-        #newChat:hover {
-            border-color: var(--primary-light);
-            color: var(--primary);
-        }
-        
-        .recording-indicator {
-            display: flex;
-            align-items: center;
-            gap: 0.25rem;
-        }
-        
-        .pulse-dot {
-            width: 0.5rem;
-            height: 0.5rem;
-            border-radius: 50%;
-            background: white;
-            animation: pulse 1.5s infinite;
-        }
-        
-        /* Toggle Switch */
         .toggle-switch {
             position: relative;
             display: inline-block;
@@ -352,7 +212,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background-color: #e2e8f0;
+            background-color: rgba(255, 255, 255, 0.3);
             transition: .4s;
             border-radius: 1.5rem;
         }
@@ -371,11 +231,176 @@
         }
         
         .toggle-input:checked + .toggle-label {
-            background-color: var(--primary);
+            background-color: var(--success);
         }
         
         .toggle-input:checked + .toggle-label:before {
             transform: translateX(1rem);
+        }
+        
+        .toggle-text {
+            font-size: 0.625rem;
+            margin-left: 0.25rem;
+            color: white;
+        }
+        
+        /* Chat messages area */
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0.75rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            background-color: rgba(246, 248, 252, 0.5);
+        }
+        
+        .message {
+            display: flex;
+            margin-bottom: 0.5rem;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .message-user {
+            justify-content: flex-end;
+        }
+        
+        .message-ai {
+            justify-content: flex-start;
+        }
+        
+        .message-content {
+            padding: 0.6rem 0.8rem;
+            border-radius: var(--radius);
+            max-width: 80%;
+            word-wrap: break-word;
+            box-shadow: var(--shadow-sm);
+            font-size: 0.85rem;
+            line-height: 1.4;
+        }
+        
+        .message-user .message-content {
+            background-color: var(--primary);
+            color: white;
+            border-radius: var(--radius) var(--radius-sm) var(--radius-sm) var(--radius);
+        }
+        
+        .message-ai .message-content {
+            background-color: white;
+            color: var(--text);
+            border-radius: var(--radius-sm) var(--radius) var(--radius) var(--radius-sm);
+            border-left: 4px solid var(--success);
+        }
+        
+        /* Update live transcript styling for new position */
+        .live-transcript {
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 0.6rem 0.8rem;
+            margin: 0;
+            border-top: 1px solid var(--border);
+            border-left: 4px solid var(--primary);
+            font-style: italic;
+            color: var(--text-light);
+            box-shadow: var(--shadow-sm);
+            display: none;
+            max-height: 80px;
+            overflow-y: auto;
+            opacity: 0.9;
+            font-size: 0.8rem;
+            position: relative;
+        }
+        
+        .live-transcript.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        #liveIndicator {
+            background-color: #ef4444;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-size: 0.625rem;
+            margin-right: 0.5rem;
+            font-weight: 600;
+            animation: pulse 1.5s infinite;
+        }
+        
+        /* Controls area */
+        .controls {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0.9rem;
+            background-color: white;
+            border-top: 1px solid var(--border);
+        }
+        
+        .control-buttons {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.5rem;
+            justify-content: center;
+        }
+        
+        .mic-button {
+            height: 3.5rem;
+            width: 3.5rem;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(99, 102, 241, 0.3);
+        }
+        
+        .mic-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(99, 102, 241, 0.4);
+        }
+        
+        .mic-button.recording {
+            background: linear-gradient(135deg, var(--danger), #dc2626);
+            animation: pulse-button 2s infinite;
+            box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3);
+        }
+        
+        .mic-button i {
+            font-size: 1.5rem;
+            color: white;
+        }
+        
+        .reset-button {
+            height: 2.25rem;
+            width: 2.25rem;
+            border-radius: 50%;
+            background-color: #e5e7eb;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .reset-button:hover {
+            background-color: #d1d5db;
+        }
+        
+        .reset-button i {
+            font-size: 1rem;
+            color: #4b5563;
+        }
+        
+        .status-text {
+            font-size: 0.75rem;
+            color: var(--text-light);
+            text-align: center;
+            margin-top: 0.5rem;
         }
         
         /* Screen Sharing Indicator */
@@ -402,25 +427,6 @@
             overflow: visible !important;
         }
         
-        .screen-sharing-mode .container::before {
-            content: '';
-            position: absolute;
-            top: -5px;
-            left: -5px;
-            right: -5px;
-            bottom: -5px;
-            border: 1px dashed var(--danger);
-            border-radius: var(--radius-lg);
-            pointer-events: none;
-            animation: pulse-border 2s infinite;
-        }
-        
-        @keyframes pulse-border {
-            0% { border-color: rgba(239, 68, 68, 0.5); }
-            50% { border-color: rgba(239, 68, 68, 1); }
-            100% { border-color: rgba(239, 68, 68, 0.5); }
-        }
-        
         /* Utility Classes */
         .hidden {
             display: none !important;
@@ -439,6 +445,18 @@
             100% {
                 transform: scale(0.95);
                 box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+            }
+        }
+        
+        @keyframes pulse-button {
+            0% {
+                box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(239, 68, 68, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
             }
         }
         
@@ -464,21 +482,6 @@
             to { opacity: 1; }
         }
         
-        /* Responsive Adjustments */
-        @media (max-width: 480px) {
-            .product-name {
-                font-size: 2rem;
-            }
-            
-            .button-group {
-                flex-wrap: wrap;
-            }
-            
-            .btn {
-                flex: 1 0 45%;
-            }
-        }
-        
         /* Loading Animation */
         .loading-dots {
             display: inline-flex;
@@ -502,6 +505,51 @@
         @keyframes loading-dots {
             0%, 80%, 100% { transform: scale(0); }
             40% { transform: scale(1); }
+        }
+        
+        /* Processing spinner */
+        .processing-spinner {
+            display: inline-block;
+            width: 1rem;
+            height: 1rem;
+            border: 2px solid var(--primary-light);
+            border-radius: 50%;
+            border-top-color: var(--primary);
+            animation: spin 1s linear infinite;
+            margin-right: 0.375rem;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Compact toggle switch */
+        .toggle-container {
+            display: flex;
+            align-items: center;
+        }
+        
+        .toggle-switch.compact {
+            width: 2rem;
+            height: 1.2rem;
+            margin-left: 0.25rem;
+        }
+        
+        .toggle-switch.compact .toggle-label:before {
+            height: 0.9rem;
+            width: 0.9rem;
+            left: 0.2rem;
+            bottom: 0.15rem;
+        }
+        
+        .toggle-switch.compact .toggle-input:checked + .toggle-label:before {
+            transform: translateX(0.8rem);
+        }
+        
+        .toggle-text {
+            font-size: 0.7rem;
+            margin-left: 0.25rem;
+            color: #6b7280;
         }
     </style>
 </head>
@@ -536,53 +584,43 @@
 
         <!-- Main App Content (initially hidden) -->
         <div id="appContent" class="content hidden">
-            <div class="section">
-                <div class="section-title">
-                    <i class="fas fa-comment-alt"></i> Transcript
-                </div>
-                <div class="card">
-                    <div id="transcript">Waiting for speech...</div>
-                </div>
-            </div>
-            
-            <div class="section">
-                <div class="section-title">
-                    <i class="fas fa-robot"></i> AI Response
-                </div>
-                <div class="card">
-                    <div id="answer">Answers will appear here</div>
+            <!-- Chat Messages Area - no header -->
+            <div class="chat-messages" id="chatMessages">
+                <!-- Welcome message -->
+                <div class="message message-ai">
+                    <div class="message-content">
+                        Hello! I'm your AI meeting assistant. Press the microphone button or spacebar to start recording.
+                    </div>
                 </div>
             </div>
             
-            <div class="button-group">
-                <button id="toggle" class="btn btn-primary">
-                    <span id="recordingIndicator" class="recording-indicator" style="display: none;">
+            <!-- Live transcript moved here, between chat messages and controls -->
+            <div id="liveTranscript" class="live-transcript">
+                <span id="liveIndicator" class="hidden">LIVE</span>
+                <span id="transcriptText">Waiting for speech...</span>
+            </div>
+            
+            <!-- Controls Area -->
+            <div class="controls">
+                <div class="control-buttons">
+                    <button id="micButton" class="mic-button">
                         <i class="fas fa-microphone"></i>
-                        <span class="pulse-dot"></span>
-                    </span>
-                    <span id="startText">
-                        <i class="fas fa-microphone"></i>
-                        Start Recording
-                    </span>
-                </button>
-                <button id="getAnswer" class="btn">
-                    <i class="fas fa-lightbulb"></i>
-                    Get Answer Again
-                </button>
-                <button id="newChat" class="btn">
-                    <i class="fas fa-plus"></i>
-                    New
-                </button>
-                <div class="toggle-switch">
-                    <input type="checkbox" id="screenSharingMode" class="toggle-input">
-                    <label for="screenSharingMode" class="toggle-label"></label>
-                    <span class="toggle-text">Hide</span> <!-- Added text -->
+                    </button>
+                    <button id="resetButton" class="reset-button">
+                        <i class="fas fa-refresh"></i>
+                    </button>
+                    <!-- Hide toggle moved here -->
+                    <div class="toggle-container">
+                        <div class="toggle-switch compact">
+                            <input type="checkbox" id="screenSharingMode" class="toggle-input">
+                            <label for="screenSharingMode" class="toggle-label"></label>
+                            <span class="toggle-text">Hide</span>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            
-            <div style="text-align: center; margin-top: 10px; font-size: 0.8rem; color: var(--text-light);">
-                <i class="fas fa-keyboard" style="margin-right: 5px;"></i>
-                Press <kbd style="background: #f1f5f9; padding: 2px 5px; border-radius: 3px; box-shadow: 0 1px 1px rgba(0,0,0,0.1); font-family: monospace;">Spacebar</kbd> to start/stop recording
+                <div id="statusText" class="status-text">
+                    Press microphone button or spacebar to start recording
+                </div>
             </div>
         </div>
     </div>
@@ -592,27 +630,76 @@
         const { ipcRenderer } = require('electron');
         
         // Get all necessary DOM elements
-        const toggleButton = document.getElementById('toggle');
-        const getAnswerButton = document.getElementById('getAnswer');
         const startAppButton = document.getElementById('startApp');
         const welcomeScreen = document.getElementById('welcomeScreen');
         const appContent = document.getElementById('appContent');
-        const newChatButton = document.getElementById('newChat');
         const screenSharingToggle = document.getElementById('screenSharingMode');
-        const recordingIndicator = document.getElementById('recordingIndicator');
-        const startText = document.getElementById('startText');
+        const micButton = document.getElementById('micButton');
+        const resetButton = document.getElementById('resetButton');
+        const statusText = document.getElementById('statusText');
+        const chatMessages = document.getElementById('chatMessages');
+        const liveTranscript = document.getElementById('liveTranscript');
+        const transcriptText = document.getElementById('transcriptText');
+        const liveIndicator = document.getElementById('liveIndicator');
         
         let isRecording = false;
+        let isProcessingToggle = false;
         let mediaRecorder = null;
         let audioChunks = [];
+        let messages = [];
 
         // Make sure appContent is hidden initially
         appContent.classList.add('hidden');
         
-        // Function to show loading animation in the answer area
-        function showAnswerLoading() {
-            const answerElement = document.getElementById('answer');
-            answerElement.innerHTML = 'Thinking<div class="loading-dots"><div class="loading-dot"></div><div class="loading-dot"></div><div class="loading-dot"></div></div>';
+        // Function to show loading animation
+        function showLoadingAnimation() {
+            return `<div class="loading-dots">
+                <div class="loading-dot"></div>
+                <div class="loading-dot"></div>
+                <div class="loading-dot"></div>
+            </div>`;
+        }
+        
+        // Function to add a message to the chat
+        function addMessage(text, isUser = false) {
+            // Create message element
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isUser ? 'message-user' : 'message-ai'}`;
+            
+            const messageContent = document.createElement('div');
+            messageContent.className = 'message-content';
+            messageContent.textContent = text;
+            
+            messageDiv.appendChild(messageContent);
+            
+            // Add to chat
+            chatMessages.appendChild(messageDiv);
+            
+            // Scroll to bottom
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            
+            // Store in messages array
+            messages.push({ text, isUser });
+        }
+        
+        // Function to update live transcript
+        function updateLiveTranscript(text) {
+            if (text && text.trim()) {
+                transcriptText.textContent = text;
+                liveTranscript.classList.add('active');
+                
+                // Make sure live indicator is visible when transcribing
+                if (isRecording) {
+                    liveIndicator.classList.remove('hidden');
+                }
+            } else {
+                liveTranscript.classList.remove('active');
+            }
+        }
+        
+        // Update status text
+        function updateStatus(text) {
+            statusText.textContent = text;
         }
         
         // Start button click handler
@@ -628,7 +715,7 @@
                     audio: {
                         echoCancellation: true,
                         noiseSuppression: true,
-                        sampleRate: 48000,  // Match the sample rate we're using for Google Speech API
+                        sampleRate: 48000,
                         channelCount: 1
                     }
                 });
@@ -644,158 +731,144 @@
                     }
                 };
                 
-                mediaRecorder.onstop = async () => {
-                    try {
-                        const audioBlob = new Blob(audioChunks, { type: 'audio/webm;codecs=opus' });
-                        const reader = new FileReader();
-                        
-                        reader.onload = () => {
-                            const base64Audio = reader.result.split(',')[1];
-                            console.log('Sending audio data to main process, format: webm/opus, size:', base64Audio.length);
-                            ipcRenderer.send('audio-data', base64Audio);
-                            audioChunks = [];
-                        };
-                        
-                        reader.onerror = (error) => {
-                            console.error('Error reading audio data:', error);
-                            document.getElementById('transcript').textContent = `Error: ${error.message}`;
-                        };
-                        
-                        reader.readAsDataURL(audioBlob);
-                    } catch (error) {
-                        console.error('Error processing audio:', error);
-                        document.getElementById('transcript').textContent = `Error: ${error.message}`;
-                    }
-                };
-                
                 return true;
             } catch (error) {
                 console.error('Error initializing recording:', error);
-                document.getElementById('transcript').textContent = `Error: ${error.message}`;
+                addMessage(`Error: ${error.message}`, false);
                 return false;
             }
         }
 
-        // Toggle recording
+        // Toggle recording function
         async function toggleRecording() {
             try {
+                // If already processing a toggle, ignore this request
+                if (isProcessingToggle) return;
+                isProcessingToggle = true;
+                
                 // If mediaRecorder is null, initialize it
                 if (!mediaRecorder) {
                     const initialized = await initializeRecording();
-                    if (!initialized) return;
+                    if (!initialized) {
+                        isProcessingToggle = false;
+                        return;
+                    }
                 }
 
-                // Check MediaRecorder state and handle accordingly
+                // Check recording state and handle accordingly
                 if (!isRecording) {
-                    // Only start if not already recording
-                    if (mediaRecorder.state !== 'recording') {
-                        audioChunks = [];
-                        console.log('Starting MediaRecorder...');
-                        mediaRecorder.start(1000); // Collect data every second
-                        isRecording = true;
-                        recordingIndicator.style.display = 'flex';
-                        startText.style.display = 'none';
-                        toggleButton.classList.add('recording');
-                        document.getElementById('transcript').textContent = 'Recording...';
-                    } else {
-                        console.warn('MediaRecorder is already recording');
-                    }
+                    // Starting a new recording
+                    audioChunks = [];
+                    console.log('Starting recording');
+                    
+                    // Update UI
+                    micButton.classList.add('recording');
+                    micButton.innerHTML = '<i class="fas fa-microphone-slash"></i>';
+                    updateStatus('Listening... Click microphone or press spacebar to stop');
+                    
+                    // Show and reset the live transcript
+                    updateLiveTranscript('Listening...');
+                    liveIndicator.classList.remove('hidden');
+                    
+                    // Configure streaming data handler for real-time chunks
+                    mediaRecorder.ondataavailable = (event) => {
+                        if (event.data.size > 0) {
+                            audioChunks.push(event.data);
+                            
+                            // Process the chunk immediately for streaming
+                            const reader = new FileReader();
+                            reader.onload = () => {
+                                const base64Audio = reader.result.split(',')[1];
+                                // Send this chunk to the main process for real-time processing
+                                ipcRenderer.send('stream-audio-chunk', base64Audio);
+                            };
+                            reader.readAsDataURL(event.data);
+                        }
+                    };
+                    
+                    // Start recording with smaller timeslice for more frequent updates
+                    mediaRecorder.start(100);
+                    
+                    // Signal to main process that we're starting to record
+                    ipcRenderer.send('toggle-recording', true);
+                    
+                    isRecording = true;
                 } else {
-                    // Only stop if currently recording
-                    if (mediaRecorder.state === 'recording') {
-                        console.log('Stopping MediaRecorder...');
+                    // Stopping recording
+                    console.log('Stopping recording');
+                    
+                    // Update UI
+                    micButton.classList.remove('recording');
+                    micButton.innerHTML = '<i class="fas fa-microphone"></i>';
+                    updateStatus('Processing...');
+                    
+                    // Hide live indicator
+                    liveIndicator.classList.add('hidden');
+                    
+                    // Tell the main process to stop recording
+                    ipcRenderer.send('stop-audio-stream');
+                    ipcRenderer.send('toggle-recording', false);
+                    
+                    // Stop the MediaRecorder
+                    try {
                         mediaRecorder.stop();
                         const tracks = mediaRecorder.stream.getTracks();
                         tracks.forEach(track => track.stop());
-                        
-                        // Create new MediaRecorder instance for next recording
-                        mediaRecorder = null;
-                        
-                        isRecording = false;
-                        recordingIndicator.style.display = 'none';
-                        startText.style.display = 'flex';
-                        toggleButton.classList.remove('recording');
-                        document.getElementById('transcript').textContent = 'Processing...';
-                        
-                        // Show loading animation for answer
-                        showAnswerLoading();
-                        
-                        // Automatically get answer when recording stops
-                        // No need to call the getAnswer function explicitly
-                        // The answer will be automatically generated when the transcript is processed
-                    } else {
-                        console.warn('MediaRecorder is not recording');
-                        // Reset UI state if MediaRecorder is in unexpected state
-                        isRecording = false;
-                        recordingIndicator.style.display = 'none';
-                        startText.style.display = 'flex';
-                        toggleButton.classList.remove('recording');
+                    } catch (error) {
+                        console.error('Error stopping MediaRecorder:', error);
                     }
+                    
+                    // Create new MediaRecorder instance for next recording
+                    mediaRecorder = null;
+                    
+                    isRecording = false;
                 }
+                
+                // Reset the processing flag with a slight delay to prevent double toggles
+                setTimeout(() => {
+                    isProcessingToggle = false;
+                }, 300);
             } catch (error) {
                 console.error('Error toggling recording:', error);
-                document.getElementById('transcript').textContent = `Error: ${error.message}`;
+                addMessage(`Error: ${error.message}`, false);
                 
-                // Reset state on error
+                // Reset UI
+                micButton.classList.remove('recording');
+                micButton.innerHTML = '<i class="fas fa-microphone"></i>';
+                updateStatus('Error recording. Please try again.');
+                
+                // Reset state
                 isRecording = false;
-                recordingIndicator.style.display = 'none';
-                startText.style.display = 'flex';
-                toggleButton.classList.remove('recording');
-                
-                // Try to recreate the mediaRecorder
+                isProcessingToggle = false;
                 mediaRecorder = null;
             }
         }
         
-        // Get Answer button click handler (now just calls getAnswer for the current transcript)
-        getAnswerButton.addEventListener('click', () => {
-            const transcript = document.getElementById('transcript').textContent;
-            if (transcript && transcript !== 'Waiting for speech...' && transcript !== 'Recording...' && transcript !== 'Processing...') {
-                // Show loading animation
-                showAnswerLoading();
-                ipcRenderer.send('get-answer', transcript);
-            }
-        });
-    
-        // New Chat button click handler
-        newChatButton.addEventListener('click', () => {
-            console.log('New chat button clicked');
-            
-            // If currently recording, stop it
-            if (isRecording && mediaRecorder && mediaRecorder.state === 'recording') {
-                console.log('Stopping MediaRecorder due to new chat...');
-                try {
-                    mediaRecorder.stop();
-                    const tracks = mediaRecorder.stream.getTracks();
-                    tracks.forEach(track => track.stop());
-                } catch (error) {
-                    console.error('Error stopping MediaRecorder:', error);
-                }
+        // Reset conversation
+        function resetConversation() {
+            // Clear messages except the first welcome message
+            while (chatMessages.children.length > 1) {
+                chatMessages.removeChild(chatMessages.lastChild);
             }
             
-            // Reset MediaRecorder for fresh start
-            mediaRecorder = null;
-            audioChunks = [];
-            isRecording = false;
+            // Hide transcript
+            liveTranscript.classList.remove('active');
             
-            // Reset UI
-            recordingIndicator.style.display = 'none';
-            startText.style.display = 'flex';
-            toggleButton.classList.remove('recording');
+            // Reset messages array except welcome message
+            messages = messages.slice(0, 1);
             
-            // Clear transcript and answer
-            document.getElementById('transcript').textContent = 'Waiting for speech...';
-            document.getElementById('answer').textContent = 'Answers will appear here';
+            // Reset status
+            updateStatus('Conversation reset. Press microphone or spacebar to start recording');
             
-            // Notify main process
-            ipcRenderer.send('new-chat');
-        });
+            // Tell main process to reset transcript
+            ipcRenderer.send('reset-transcript');
+        }
         
-        // Toggle button click handler
-        toggleButton.addEventListener('click', () => {
-            console.log('Toggle recording button clicked, current state:', isRecording ? 'recording' : 'not recording');
-            toggleRecording();
-        });
+        // Mic button click handler
+        micButton.addEventListener('click', toggleRecording);
+        
+        // Reset button click handler
+        resetButton.addEventListener('click', resetConversation);
         
         // Add spacebar handler for toggling recording
         document.addEventListener('keydown', (event) => {
@@ -816,26 +889,16 @@
             
             // First update UI immediately to give user feedback
             const indicator = document.getElementById('screenSharingIndicator');
-            const body = document.body;
-            const container = document.querySelector('.container');
             
             if (isHideMode) {
                 // Show screen sharing mode indicator
                 indicator.style.display = 'flex';
                 indicator.innerHTML = '<i class="fas fa-desktop"></i> Hiding from Screen Capture...';
                 
-                // Add visual cues
-                body.classList.add('screen-sharing-mode');
-                container.style.border = '2px solid #ef4444';
-                container.style.boxShadow = '0 0 8px rgba(239, 68, 68, 0.5)';
-                
                 console.log('Requested screen sharing hide mode');
             } else {
                 // Hide indicators
                 indicator.style.display = 'none';
-                body.classList.remove('screen-sharing-mode');
-                container.style.border = '';
-                container.style.boxShadow = '';
                 
                 console.log('Requested normal mode');
             }
@@ -844,77 +907,72 @@
             ipcRenderer.send('toggle-screen-sharing-mode', isHideMode);
         });
         
-        // Screen sharing mode visual indicator handler
-        ipcRenderer.on('screen-sharing-active', (event, isActive) => {
-            const indicator = document.getElementById('screenSharingIndicator');
-            
-            if (isActive) {
-                indicator.style.display = 'flex';
-                indicator.innerHTML = '<i class="fas fa-shield-alt"></i> Hidden from Screen Capture';
-            } else {
-                indicator.style.display = 'none';
-            }
-        });
-
-        // Add transcript update handler
+        // IPC event handlers
+        
+        // Handle live transcript updates
         ipcRenderer.on('transcript', (event, text) => {
-            const transcriptElement = document.getElementById('transcript');
-            if (text && text.trim()) {
-                transcriptElement.textContent = text;
-                // Show loading animation for answer whenever transcript updates
-                showAnswerLoading();
-            } else {
-                transcriptElement.textContent = 'No speech detected. Please try again.';
+            if (text && text.trim() && text !== 'Recording...') {
+                updateLiveTranscript(text);
             }
         });
 
-        // Add answer update handler
+        // Handle recording started
+        ipcRenderer.on('recording-started', () => {
+            console.log('Recording started signal received');
+        });
+        
+        // Handle recording stopped
+        ipcRenderer.on('recording-stopped', () => {
+            console.log('Recording stopped signal received');
+            
+            // Update UI if needed
+            if (isRecording) {
+                isRecording = false;
+                micButton.classList.remove('recording');
+                micButton.innerHTML = '<i class="fas fa-microphone"></i>';
+            }
+        });
+        
+        // Handle answers
         ipcRenderer.on('answer', (event, text) => {
-            console.log('Received answer from main process:', text);
-            const answerElement = document.getElementById('answer');
-            if (text && text.trim()) {
-                answerElement.textContent = text;
+            // Get transcript text
+            const transcript = transcriptText.textContent;
+            
+            // Only add transcript and answer if not empty
+            if (transcript && transcript !== 'Listening...' && transcript !== 'Waiting for speech...') {
+                // Add the transcript as a user message
+                addMessage(transcript, true);
+                
+                // Add the answer
+                if (text && text.trim()) {
+                    addMessage(text, false);
+                } else {
+                    addMessage('No answer received. Please try again.', false);
+                }
             } else {
-                answerElement.textContent = 'No answer received. Please try again.';
+                addMessage('No speech detected. Please try again.', false);
             }
+            
+            // Update status
+            updateStatus('Press microphone or spacebar to start recording');
         });
-
-        // Add error handler
-        ipcRenderer.on('recording-error', (event, errorMessage) => {
-            console.error('Recording error:', errorMessage);
-            document.getElementById('transcript').textContent = `Error: ${errorMessage}`;
-            
-            // Reset recording state
-            isRecording = false;
-            recordingIndicator.style.display = 'none';
-            startText.style.display = 'flex';
-            toggleButton.classList.remove('recording');
-            
-            // Show error dialog
-            const errorDialog = document.createElement('div');
-            errorDialog.style.position = 'fixed';
-            errorDialog.style.top = '20px';
-            errorDialog.style.left = '50%';
-            errorDialog.style.transform = 'translateX(-50%)';
-            errorDialog.style.backgroundColor = '#ef4444';
-            errorDialog.style.color = 'white';
-            errorDialog.style.padding = '12px 20px';
-            errorDialog.style.borderRadius = '8px';
-            errorDialog.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
-            errorDialog.style.zIndex = '9999';
-            errorDialog.textContent = errorMessage;
-            
-            document.body.appendChild(errorDialog);
-            
-            setTimeout(() => {
-                errorDialog.remove();
-            }, 5000);
+        
+        // Handle answer status updates
+        ipcRenderer.on('answer-status', (event, message) => {
+            updateStatus(message);
         });
-
+        
+        // Handle transcription errors
+        ipcRenderer.on('transcription-error', (event, errorMessage) => {
+            console.error('Transcription error:', errorMessage);
+            addMessage(`Error: ${errorMessage}`, false);
+            updateStatus('Error during transcription. Please try again.');
+        });
+        
         // Initialize recording when the app starts
         initializeRecording().then(success => {
             if (!success) {
-                document.getElementById('transcript').textContent = 'Failed to initialize microphone';
+                updateStatus('Failed to initialize microphone. Please check permissions.');
             }
         });
     </script>

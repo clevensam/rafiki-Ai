@@ -12,19 +12,15 @@ rm -rf node_modules/.cache
 echo "Installing dependencies..."
 npm install
 
-# Create empty directory for sox-bin to prevent build errors
-echo "Setting up sox-bin directory..."
-mkdir -p node_modules/sox-bin/bin
-
 # Rebuild native modules
 echo "Rebuilding native modules..."
 electron-rebuild
 
-# Build for macOS (both Intel and Apple Silicon)
-echo "Building for macOS..."
-CSC_IDENTITY_AUTO_DISCOVERY=false npm run build-mac
+# Build for macOS (Apple Silicon)
+echo "Building for macOS (Apple Silicon)..."
+CSC_IDENTITY_AUTO_DISCOVERY=false NOTARIZE=false npm run build-macarm
 if [ $? -ne 0 ]; then
-    echo "Error: macOS build failed"
+    echo "Error: macOS (Apple Silicon) build failed"
     exit 1
 fi
 
@@ -38,18 +34,14 @@ fi
 
 # Verify the builds
 echo "Verifying builds..."
-if [ ! -f "dist/Angel AI Meeting Assistant-1.0.0-mac.zip" ] && [ ! -f "dist/Angel AI Meeting Assistant-1.0.0-arm64-mac.zip" ]; then
-    echo "Error: macOS builds not found"
-    exit 1
-fi
-
 ls -la dist/
 
 echo "Build completed successfully!"
 echo "You can find the builds in the dist directory:"
-echo "- macOS Intel: dist/Angel AI Meeting Assistant-1.0.0-mac.zip"
 echo "- macOS Apple Silicon: dist/Angel AI Meeting Assistant-1.0.0-arm64-mac.zip"
-echo "- Windows: dist/Angel AI Meeting Assistant*.exe"
+echo "- macOS Apple Silicon: dist/Angel AI Meeting Assistant-1.0.0-arm64.dmg"
+echo "- Windows: dist/Angel AI Meeting Assistant Setup 1.0.0.exe"
+echo "- Windows: dist/Angel AI Meeting Assistant-1.0.0-win.zip"
 echo ""
 echo "Note: These builds are not code signed. Users may need to bypass security warnings."
 
@@ -57,6 +49,5 @@ echo "Note: These builds are not code signed. Users may need to bypass security 
 echo ""
 echo "Build sizes:"
 ls -lh dist/*.zip 
-if [ -f "dist/Angel AI Meeting Assistant-1.0.0-arm64.dmg" ]; then
-    ls -lh dist/*.dmg
-fi 
+ls -lh dist/*.dmg 2>/dev/null || true
+ls -lh dist/*.exe 2>/dev/null || true 

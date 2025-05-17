@@ -12,6 +12,7 @@ let recording = null
 let isRecording = false
 let recognizeStream = null
 let currentTranscript = ''
+let answerDebounceTimer = null
 
 // Create a backup of window position and size for restoring
 let windowState = {
@@ -26,7 +27,9 @@ let isInScreenSharingMode = false;
 
 // Initialize OpenAI client with simple configuration
 const openai = new OpenAI({
-  apiKey: 'sk-REPLACED_PLACEHOLDER' // Replace with your actual key before using
+  apiKey: 'sk-REPLACED_PLACEHOLDER', // Replace with your actual key before using
+  maxRetries: 3, // Add retry logic
+  timeout: 60000 // 60 second timeout for the overall client, not per request
 });
 
 // Add this near the top with other platform-specific code
@@ -102,8 +105,8 @@ function createWindow() {
 function createRecognizeStream() {
   const request = {
     config: {
-      encoding: 'LINEAR16',
-      sampleRateHertz: 16000,
+      encoding: 'WEBM_OPUS',  // Changed to match browser's MediaRecorder format
+      sampleRateHertz: 48000, // Changed to match browser's MediaRecorder format (48kHz)
       languageCode: 'en-US',
       enableAutomaticPunctuation: true,
       model: 'default',
@@ -140,116 +143,228 @@ function createRecognizeStream() {
         const transcript = result.alternatives[0].transcript
         
         if (result.isFinal) {
+          // For final results, append to the running transcript
           currentTranscript = (currentTranscript + ' ' + transcript).trim()
           if (mainWindow) {
             mainWindow.webContents.send('transcript', currentTranscript)
-            // Automatically get answer when we have final transcription
-            getOpenAIAnswer(currentTranscript)
+            // Removed automatic answer generation here
           }
         } else {
+          // For interim results, show the current transcript plus the interim result
+          // This gives the live transcription feel without modifying currentTranscript yet
           if (mainWindow) {
-            mainWindow.webContents.send('transcript', 
-              (currentTranscript + ' ' + transcript).trim())
+            const interimTranscript = (currentTranscript + ' ' + transcript).trim()
+            mainWindow.webContents.send('transcript', interimTranscript)
+            
+            // Removed debounced answer generation here
           }
         }
       }
     })
 }
 
-// Function to get answer from OpenAI
-async function getOpenAIAnswer(transcript) {
-  try {
-    console.log('Sending to OpenAI:', transcript)
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
-      messages: [
-        {
-          role: "system",
-          content: "You are a helpful AI assistant in a meeting. Keep your responses very brief, clear, and direct."
-        },
-        {
-          role: "user",
-          content: transcript
-        }
-      ],
-      temperature: 0.5,
-      max_tokens: 120,
-      presence_penalty: 0,
-      frequency_penalty: 0
-    });
+// Update the toggle-recording handler to provide immediate feedback
+ipcMain.on('toggle-recording', async (event, isStarting) => {
+  // Clear timeout if there's any pending
+  if (answerDebounceTimer) {
+    clearTimeout(answerDebounceTimer);
+    answerDebounceTimer = null;
+  }
 
-    if (completion?.choices?.[0]?.message?.content) {
-      const answer = completion.choices[0].message.content
-      console.log('Received answer from OpenAI:', answer)
-      // Explicitly send answer to UI
-      if (mainWindow && !mainWindow.isDestroyed()) {
-        console.log('Sending answer to UI')
-        mainWindow.webContents.send('answer', answer)
-      } else {
-        console.error('Main window not available for sending answer')
+  // Handle recording start/stop based on explicit parameter
+  if (isStarting) {
+    // Starting a new recording session
+    console.log('Starting new recording session');
+    isRecording = true;
+    // Reset transcript when starting a new recording
+    currentTranscript = '';
+    recognizeStream = createRecognizeStream();
+    
+    if (mainWindow && !mainWindow.isDestroyed()) {
+      mainWindow.webContents.send('recording-started');
+      // Send empty transcript to UI
+      mainWindow.webContents.send('transcript', '');
+    }
+  } else {
+    // Stopping recording - this should be fast
+    console.log('Stopping recording and generating answer');
+    isRecording = false;
+    
+    // Close the stream properly
+    if (recognizeStream) {
+      try {
+        recognizeStream.end();
+        recognizeStream = null;
+      } catch (error) {
+        console.error('Error ending recognizeStream:', error);
       }
-    } else {
-      console.error('No answer content in OpenAI response')
-      if (mainWindow && !mainWindow.isDestroyed()) {
-        mainWindow.webContents.send('answer', 'Could not generate an answer. Please try again.')
+    }
+    
+    if (mainWindow && !mainWindow.isDestroyed()) {
+      mainWindow.webContents.send('recording-stopped');
+      
+      // Get answer immediately for the current transcript
+      if (currentTranscript && currentTranscript.trim().length > 0) {
+        try {
+          // Send a preliminary status message
+          mainWindow.webContents.send('answer-status', 'Generating answer...');
+          
+          // Generate answer with shorter timeout
+          await getOpenAIAnswer(currentTranscript);
+        } catch (error) {
+          console.error('Error generating answer:', error);
+          if (mainWindow && !mainWindow.isDestroyed()) {
+            mainWindow.webContents.send('answer', 'Error generating answer. Please try again.');
+          }
+        }
+      } else {
+        mainWindow.webContents.send('answer', 'No speech detected. Please try again.');
+      }
+    }
+  }
+});
+
+// Add this handler for stream audio chunks with proper error handling
+ipcMain.on('stream-audio-chunk', async (event, audioChunk) => {
+  try {
+    // Skip processing if we're not recording
+    if (!isRecording) return;
+    
+    // Create recognizeStream if it doesn't exist
+    if (!recognizeStream || recognizeStream.destroyed) {
+      recognizeStream = createRecognizeStream();
+      isRecording = true;
+    }
+    
+    // Write the chunk to the stream
+    if (recognizeStream && !recognizeStream.destroyed) {
+      // Convert base64 audio chunk to buffer
+      const audioBuffer = Buffer.from(audioChunk, 'base64');
+      
+      try {
+        recognizeStream.write(audioBuffer);
+      } catch (error) {
+        console.error('Stream write error:', error);
+        // Don't recreate the stream here to avoid infinite loops
+        // Just log the error and let the next chunk attempt to fix if needed
       }
     }
   } catch (error) {
-    console.error('OpenAI API error:', error)
+    console.error('Error processing audio chunk:', error);
+  }
+});
+
+// Optimize the OpenAI answer function for speed
+async function getOpenAIAnswer(transcript) {
+  try {
+    if (!transcript || transcript.trim().length === 0) {
+      console.log('Empty transcript, not sending to OpenAI');
+      if (mainWindow && !mainWindow.isDestroyed()) {
+        mainWindow.webContents.send('answer', 'I couldn\'t hear anything. Please try again.');
+      }
+      return;
+    }
+
+    console.log('Sending to OpenAI:', transcript);
+    
+    // Send status update
     if (mainWindow && !mainWindow.isDestroyed()) {
-      mainWindow.webContents.send('answer', 'Could not generate an answer. Please try again.')
+      mainWindow.webContents.send('answer-status', 'Generating answer...');
+    }
+
+    // Try with faster model first
+    const models = [
+      "gpt-3.5-turbo", // Fall back to more reliable model
+      "gpt-4o-mini"    // Try this first
+    ];
+    
+    let completion = null;
+    let modelIndex = 1; // Start with gpt-4o-mini
+    let error = null;
+    
+    while (!completion && modelIndex >= 0) {
+      try {
+        const model = models[modelIndex];
+        console.log(`Trying model: ${model}`);
+        
+        completion = await openai.chat.completions.create({
+          model: model,
+          messages: [
+            {
+              role: "system", 
+              content: "You are a helpful AI assistant in a meeting. Your answers must be brief, clear, and direct - no more than 2-3 sentences."
+            },
+            {
+              role: "user",
+              content: transcript
+            }
+          ],
+          temperature: 0.3, // Lower temperature for more predictable outputs
+          max_tokens: 100,  // Reduce token count for faster responses
+          presence_penalty: 0,
+          frequency_penalty: 0
+        });
+        
+      } catch (err) {
+        console.error(`Error with model ${models[modelIndex]}:`, err);
+        error = err;
+        modelIndex--; // Try the next model in the list
+      }
+    }
+
+    if (completion?.choices?.[0]?.message?.content) {
+      const answer = completion.choices[0].message.content;
+      console.log('Received answer from OpenAI:', answer);
+      
+      // Explicitly send answer to UI
+      if (mainWindow && !mainWindow.isDestroyed()) {
+        console.log('Sending answer to UI');
+        mainWindow.webContents.send('answer', answer);
+      } else {
+        console.error('Main window not available for sending answer');
+      }
+    } else {
+      console.error('No answer content in OpenAI response');
+      
+      // Send appropriate error message
+      if (mainWindow && !mainWindow.isDestroyed()) {
+        if (error) {
+          mainWindow.webContents.send('answer', `Sorry, I couldn't generate an answer: ${error.message}`);
+        } else {
+          mainWindow.webContents.send('answer', 'Could not generate an answer. Please try again.');
+        }
+      }
+    }
+  } catch (error) {
+    console.error('OpenAI API error:', error);
+    
+    // Provide more specific error message
+    if (mainWindow && !mainWindow.isDestroyed()) {
+      if (error.code === 'ECONNRESET' || error.code === 'ETIMEDOUT') {
+        mainWindow.webContents.send('answer', 'The connection to the AI service timed out. Please try again.');
+      } else {
+        mainWindow.webContents.send('answer', `Sorry, I couldn't generate an answer: ${error.message}`);
+      }
     }
   }
 }
 
-ipcMain.on('toggle-recording', async () => {
-  if (!isRecording) {
-    isRecording = true
-    recognizeStream = createRecognizeStream()
-
-    const recordingConfig = {
-      sampleRate: 16000,
-      verbose: false,
-      silence: '10.0',
-      threshold: 0,
-      audioBufferSize: 4096,
-      channels: 1,
-      endOnSilence: false,
-      keepSilence: true,
-      asRaw: true,
-      audioType: 'wav'
-    }
-
-    recording = record.start(recordingConfig)
-
-    recording.on('data', data => {
-      if (recognizeStream && !recognizeStream.destroyed) {
-        try {
-          recognizeStream.write(data)
-        } catch (error) {
-          console.error('Stream write error:', error)
-        }
-      }
-    })
-
-    recording.on('error', error => {
-      console.error('Recording error:', error)
-      if (mainWindow) {
-        mainWindow.webContents.send('recording-error', error.message)
-      }
-    })
-  } else {
-    isRecording = false
-    if (recording) {
-      record.stop()
-      recording = null
-    }
-    if (recognizeStream) {
-      recognizeStream.end()
-      recognizeStream = null
-    }
+// Add a new IPC event handler for stopping the stream
+ipcMain.on('stop-audio-stream', () => {
+  if (recognizeStream && !recognizeStream.destroyed) {
+    isRecording = false;
+    recognizeStream.end();
+    recognizeStream = null;
   }
-})
+});
+
+// Add this new function to reset transcript without creating a new chat
+ipcMain.on('reset-transcript', () => {
+  currentTranscript = '';
+  if (mainWindow && !mainWindow.isDestroyed()) {
+    mainWindow.webContents.send('transcript', '');
+  }
+});
 
 // Completely rework the IPC handler for toggling screen sharing mode
 ipcMain.on('toggle-screen-sharing-mode', (event, isScreenSharing) => {

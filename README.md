@@ -1,79 +1,70 @@
 # Angel AI Meeting Assistant
 
-An Electron-based AI meeting assistant that provides real-time transcription and answers during meetings. The application sits on your desktop and helps answer questions during important meetings.
+Angel is a desktop application that helps you in meetings by providing real-time transcription and AI-generated answers.
 
 ## Features
 
-- Real-time speech transcription using Google Speech-to-Text
-- AI-powered answers using OpenAI GPT-4
-- Screen sharing mode (minimizes and stays on top)
-- Always-on-top functionality
-- Cross-platform support (macOS and Windows)
+- **Live Transcription**: See your speech as text in real-time
+- **AI-Powered Answers**: Get concise and helpful responses using OpenAI's advanced models
+- **Always-on-Top**: Angel stays visible over other applications
+- **Screen Sharing Mode**: Hide Angel from screen recordings with a single click
+- **Simple Interface**: Minimalist design that stays out of your way
 
-## Installation
+## Usage Instructions
 
-### macOS (Intel and Apple Silicon)
+### Basic Controls
 
-1. Download the latest DMG file from the Releases page
-2. Open the DMG file and drag the application to your Applications folder
-3. When first opening, right-click the app and select "Open" to bypass macOS security
+- **Start/Stop Recording**: Click the microphone button or press the spacebar
+- **Reset Conversation**: Click the refresh button to clear the chat history
+- **Hide from Screen Sharing**: Toggle the "Hide" switch to make Angel invisible in screen recordings
 
-### Windows
+### Keyboard Shortcuts
 
-1. Download the latest EXE installer from the Releases page
-2. Run the installer and follow the prompts
-3. Launch the application from the Start menu
+- **Spacebar**: Start or stop recording
 
-## Development Setup
+### Tips for Best Results
 
-### Prerequisites
+1. **Speak Clearly**: For the best transcription quality, speak at a normal pace and volume
+2. **Use Short Phrases**: The AI works best with concise, focused questions or statements
+3. **Position Properly**: Keep Angel visible but out of the way during your meetings
+4. **Toggle Screen Sharing**: When sharing your screen, use the Hide toggle to prevent Angel from appearing in your presentation
 
-- Node.js 18+
-- npm or yarn
-- Google Cloud account with Speech-to-Text API enabled
-- OpenAI API key
+## System Requirements
 
-### API Keys Setup
+- **macOS**: 10.14 or newer (Intel and Apple Silicon)
+- **Windows**: Windows 10 or newer (64-bit)
+- **Memory**: At least 4GB RAM recommended
+- **Microphone**: Any working microphone (internal or external)
+- **Internet**: Required for AI functionality and transcription
 
-Before using the application, you need to:
+## Privacy & Security
 
-1. Replace the placeholder OpenAI API key in `main.js` with your actual key
-2. Replace the placeholder Google Cloud credentials in `lazy-job-seeker-4b29b-eb0b308d0ba7.json` with your actual service account credentials
+- All audio is processed in real-time and is not stored
+- Transcripts and conversations remain on your local device
+- API calls to OpenAI follow their privacy and data usage policies
 
-### Installation
+## Troubleshooting
 
-1. Clone the repository
-```bash
-git clone https://github.com/Raviteja-me/angel-for-amc-windows-and-silicon.git
-cd angel-for-amc-windows-and-silicon
-```
+### Microphone Issues
 
-2. Install dependencies
-```bash
-npm install
-```
+If Angel can't hear you:
 
-3. Start the development server
-```bash
-./start.sh
-```
+1. Check your system microphone settings
+2. Ensure Angel has microphone permissions
+3. Try restarting the application
 
-### Building for Production
+### Performance Issues
 
-To build for all platforms:
-```bash
-./build-all.sh
-```
+If Angel is running slowly:
 
-To build for just macOS:
-```bash
-./build.sh
-```
+1. Close other resource-intensive applications
+2. Ensure you have a stable internet connection
+3. Restart the application
 
 ## License
 
-This project is proprietary software.
+© 2023-2024 Lazy Job Seeker. All rights reserved.
 
-## Credits
+---
 
-Developed by LazyJobSeeker.com 
+For support or questions, visit: [https://lazyjobseeker.com](https://lazyjobseeker.com) 
