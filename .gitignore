@@ -26,3 +26,11 @@ bin/
 
 # Logs
 *.log
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# Google Cloud service account credentials (never commit/push)
+lazy-job-seeker-4b29b-eb0b308d0ba7.json

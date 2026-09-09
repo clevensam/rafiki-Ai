@@ -4,7 +4,9 @@
   "description": "AI-powered Meeting Assistant that provides real-time answers during meetings",
   "main": "main.js",
   "scripts": {
-    "start": "electron .",
+    "start": "node server.js",
+    "dev": "node server.js",
+    "start:electron": "electron .",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "electron-builder",
     "build-mac": "electron-builder --mac",
@@ -19,6 +21,8 @@
     "@google-cloud/speech": "^7.0.1",
     "@google-cloud/text-to-speech": "^5.0.1",
     "axios": "^1.8.4",
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
     "node-record-lpcm16": "^0.3.1",
     "openai": "^4.24.1"
   },
