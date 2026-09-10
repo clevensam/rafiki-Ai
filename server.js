@@ -192,10 +192,13 @@ function buildSystemPrompt(jobContext) {
 
   parts.push(
     "## Answering Guidelines:\n" +
-    "- Keep answers brief, clear, and direct: no more than 2-3 sentences, unless the interviewer " +
-    "explicitly asks for detail.\n" +
-    "- For behavioral questions, answer in STAR format (Situation, Task, Action, Result) using real " +
-    "projects/metrics from the experience above.\n" +
+    "- Answer in plain, natural English, exactly like a person speaking aloud in a live interview - " +
+    "conversational and relaxed, but professional.\n" +
+    "- Keep the answer to at most 100 words. Never pad, repeat the question, or add filler.\n" +
+    "- Avoid template/robot phrasing: no 'First/Second', 'Additionally', 'In summary', and no bullet " +
+    "lists or list-like structures. Let each sentence flow naturally from the last, as spoken answers do.\n" +
+    "- For behavioral questions, answer in STAR format using real projects/metrics from the experience " +
+    "above, but tell it like a conversation, not a report.\n" +
     "- Tie each answer to the specific job requirement it addresses whenever possible.\n" +
     "- If a question is not covered by the provided context, answer honestly and generically rather " +
     "than inventing details."
@@ -311,7 +314,7 @@ async function getLLMAnswer(transcript, jobContext) {
           { role: 'user', content: transcript }
         ],
         temperature: 0.3,
-        max_tokens: 100,
+        max_tokens: 200,
         presence_penalty: 0,
         frequency_penalty: 0
       })
