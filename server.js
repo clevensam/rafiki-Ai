@@ -284,7 +284,7 @@ const llmConfig = {
 
 const openai = new OpenAI(llmConfig)
 
-const llmModels = (process.env.LLM_MODELS || 'nvidia/nemotron-3-ultra-550b-a55b:free,openai/gpt-4o-mini,anthropic/claude-3.5-haiku,google/gemini-flash-1.5')
+const llmModels = (process.env.LLM_MODELS || 'openai/gpt-4o-mini,google/gemini-2.5-flash,nvidia/nemotron-3-ultra-550b-a55b:free')
   .split(',')
   .map(m => m.trim())
   .filter(Boolean)
