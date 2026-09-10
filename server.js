@@ -219,7 +219,20 @@ function getCredentialsPath() {
 let speechClient = null
 function getSpeechClient() {
   if (!speechClient) {
-    speechClient = new speech.SpeechClient({ keyFilename: getCredentialsPath() })
+    // Prefer credentials from an env var (Vercel): base64-encoded service-account JSON.
+    // Falls back to the local key file for development.
+    const encoded = process.env.GOOGLE_CLOUD_CREDENTIALS_B64
+    if (encoded) {
+      const creds = JSON.parse(Buffer.from(encoded, 'base64').toString('utf8'))
+      if (!creds.client_email || !creds.private_key) {
+        throw new Error('GOOGLE_CLOUD_CREDENTIALS_B64 does not look like a Google service-account key')
+      }
+      speechClient = new speech.SpeechClient({ credentials: creds })
+    } else if (fs.existsSync(getCredentialsPath())) {
+      speechClient = new speech.SpeechClient({ keyFilename: getCredentialsPath() })
+    } else {
+      throw new Error('Google Cloud credentials not configured. Set GOOGLE_CLOUD_CREDENTIALS_B64 on Vercel (or restore the local key file).')
+    }
   }
   return speechClient
 }

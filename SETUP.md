@@ -65,7 +65,18 @@ The application uses Google Cloud Speech-to-Text for transcription. You need to:
 1. Create a Google Cloud project
 2. Enable the Speech-to-Text API
 3. Create a service account and download the JSON key
-4. Save the JSON key file as `lazy-job-seeker-4b29b-eb0b308d0ba7.json` in the project root
+4. Save the JSON key file as `lazy-job-seeker-4b29b-eb0b308d0ba7.json` in the project root (local dev only — this file is gitignored and never committed)
+
+### Web app / Vercel deployment
+
+The credential file is intentionally excluded from the repository. On Vercel, supply it as an environment variable instead:
+
+1. Convert the key to base64:
+   ```bash
+   base64 -w0 lazy-job-seeker-4b29b-eb0b308d0ba7.json
+   ```
+2. In your Vercel project, add the output as an environment variable named `GOOGLE_CLOUD_CREDENTIALS_B64` (for Production and/or Preview).
+3. Redeploy. The server loads the key from the env var at runtime; local development still uses the file.
 
 ## Running the Application
 
